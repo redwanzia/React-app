@@ -8,12 +8,9 @@ import Navigation from './components/navigation/Navigation';
 import Logo from './components/logo/Logo';
 import ImageLingForm from './components/imagelinkform/ImageLingForm';
 import Rank from './components/rank/Rank';
+import SignIn from './components/signIn/SignIn';
 import FaceRecognition from './components/facerecognition/FaceRecognition';
-
-
-
-
-
+import Register from './components/register/Register';
 
 
 const app = new Clarifai.App({
@@ -43,7 +40,9 @@ const particlesOptions ={
       this.state={
         input : '',
         imageUrl: '',
-        box: {}
+        box: {},
+        route:'singIn',
+        isSingedIn: false
 
 
       }
@@ -62,17 +61,14 @@ const particlesOptions ={
       topRow :  clarifyFace.top_row * height,
       rightCol: width - (clarifyFace.right_col * width ),
       bottomRow: height- (clarifyFace.bottom_row * height)
-     }
-           console.log(width, height );
+     }          
 
     }
-
 
     displayFaceBox =(box) =>{
       console.log(box);
       this.setState({box:box})
     }
-
       
 
     onInputChange = (e) => {
@@ -92,19 +88,42 @@ const particlesOptions ={
               
     }
 
+    onRouteChange = (route)=>{
+
+      if(route === 'signOut'){
+        this.setState({isSingedIn:false})
+      }else if(route === 'home'){
+        this.setState({isSingedIn:true})
+      }
+
+      this.setState({route: route})
+
+    }
+
     render() {
+      const {route,isSingedIn,box,imageUrl} = this.state
       return (
-        <div className='App'>
-        <Particles className = 'particles'
-        params={particlesOptions} />      
-        <Navigation />
-        <Logo/>   
-        <Rank/>   
-        <ImageLingForm 
-        onInputChange={this.onInputChange}
-        onButtonSubmit={this.onButtonSubmit}
-        />        
-        <FaceRecognition box={this.state.box}  imageUrl={this.state.imageUrl} />
+      <div className='App'>
+          <Particles className = 'particles'
+          params={particlesOptions} />      
+          <Navigation isSingedIn={isSingedIn}  onRouteChange={this.onRouteChange} />
+          {
+            route ==='home'
+            ? <div>
+            <Logo/>   
+            <Rank/>   
+            <ImageLingForm 
+            onInputChange={this.onInputChange}
+            onButtonSubmit={this.onButtonSubmit}
+            />        
+            <FaceRecognition box={box}  imageUrl={imageUrl} />            
+          </div>
+            :(route === 'singIn')           
+            ?<SignIn onRouteChange={this.onRouteChange} />
+            :<Register onRouteChange={this.onRouteChange} />
+            
+          }
+          
       </div>
 
       )

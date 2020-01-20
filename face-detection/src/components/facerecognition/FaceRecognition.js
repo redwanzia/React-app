@@ -12,10 +12,7 @@ const FaceRecognition = ({imageUrl,box}) => {
       right: box.rightCol,
       bottom: box.bottomRow,
       left: box.leftCol    
-    }}
-
-    
-    
+    }}   
     
     ></div>  
     </div>
